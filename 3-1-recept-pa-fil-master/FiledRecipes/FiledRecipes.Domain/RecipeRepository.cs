@@ -127,6 +127,9 @@ namespace FiledRecipes.Domain
                 handler(this, e);
             }
         }
+//Klassen använder i samband 
+//med inläsning av recept lämpligen den uppräkningsbara typen RecipeReadStatus för att hålla 
+//ordningen på vilken typ av data som lästs in från textfilen
         public void Load()
         {
           //Läs in filen: ..\\..\\App_Data\\Recipes.txt

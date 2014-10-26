@@ -12,9 +12,16 @@ namespace FiledRecipes.Views
     /// </summary>
     public class RecipeView : ViewBase, IRecipeView
     {
+//Presentationslagret innehåller ett stort antal typer av vilka typerna IRecipeView och RecipeView är 
+//intressantast. Interfacet IRecipeView definierar den funktionalitet den konkreta klassen RecipeView
+//ska ha. Basklassen ViewBase innehåller intressanta medlemmar som Header, ShowHeaderPanel och 
+//ContinueOnKeyPressed, som kommer till användning vid implementation av metoderna 
+//IRecipeView deklarerar.
         public void Show(IEnumerable<IRecipe> recipies)
         {
-
+//Basklassen ViewBase innehåller intressanta medlemmar som Header, ShowHeaderPanel och 
+//ContinueOnKeyPressed, som kommer till användning vid implementation av metoderna 
+//IRecipeView deklarerar
         }
         public void Show(IRecipe recipe)
         {
