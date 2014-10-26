@@ -129,7 +129,10 @@ namespace FiledRecipes.Domain
         }
         public void Load()
         {
-
+          //Läs in filen: ..\\..\\App_Data\\Recipes.txt
+            //Skapa ny RecipeView, en för varje rad?
+            //RecipeView.Show
+            //
         }
         public void Save() 
         { 
