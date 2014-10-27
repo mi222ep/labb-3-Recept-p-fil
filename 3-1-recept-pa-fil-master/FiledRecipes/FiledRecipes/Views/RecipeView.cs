@@ -17,11 +17,15 @@ namespace FiledRecipes.Views
 //ska ha. Basklassen ViewBase innehåller intressanta medlemmar som Header, ShowHeaderPanel och 
 //ContinueOnKeyPressed, som kommer till användning vid implementation av metoderna 
 //IRecipeView deklarerar.
+        //Basklassen ViewBase innehåller intressanta medlemmar som Header, ShowHeaderPanel och 
+        //ContinueOnKeyPressed, som kommer till användning vid implementation av metoderna 
+        //IRecipeView deklarerar
         public void Show(IEnumerable<IRecipe> recipies)
         {
-//Basklassen ViewBase innehåller intressanta medlemmar som Header, ShowHeaderPanel och 
-//ContinueOnKeyPressed, som kommer till användning vid implementation av metoderna 
-//IRecipeView deklarerar
+            //Tar emot sträng från RecipeRepository.cs
+            //Olika handlingar görs beroende på vad det är för sträng
+            //Om det är en tom rad, gör ingenting
+            //Om det är en 
         }
         public void Show(IRecipe recipe)
         {

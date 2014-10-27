@@ -135,7 +135,16 @@ namespace FiledRecipes.Domain
           //Läs in filen: ..\\..\\App_Data\\Recipes.txt
             //Skapa ny RecipeView, en för varje rad?
             //RecipeView.Show
-            //
+            //PRÖVA  FÖRST BARA LÄS IN OCH SKRIV UT ALLT
+            using (StreamReader sr = new StreamReader("..\\..\\App_Data\\reciepes.txt"))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    Console.WriteLine(line);
+                }
+            }
+            // MÅSTE GÖRAS OM TILL EN STRING, Strängen skapas här och skickas med som argument till RecipeView.cs
         }
         public void Save() 
         { 
