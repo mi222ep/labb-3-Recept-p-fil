@@ -22,16 +22,19 @@ namespace FiledRecipes.Views
         //IRecipeView deklarerar
         public void Show(IEnumerable<IRecipe> recipies)
         {
-
-            
-            //Tar emot sträng från RecipeRepository.cs
-            //Olika handlingar görs beroende på vad det är för sträng
-            //Om det är en tom rad, gör ingenting
-            //Om det är en 
+            foreach()
+            {
+                //HALP
+                Show(lokalVariabel);
+            }
         }
         public void Show(IRecipe recipe)
         {
-
+            ShowHeaderPanel();
+            Console.WriteLine(recipe.Name);
+            Console.WriteLine(recipe.Ingredients);
+            Console.WriteLine(recipe.Instructions);
+            //Console Writeline och skit
         }
     }
 }

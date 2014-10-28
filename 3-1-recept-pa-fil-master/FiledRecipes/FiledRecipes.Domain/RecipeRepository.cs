@@ -132,27 +132,75 @@ namespace FiledRecipes.Domain
 //ordningen på vilken typ av data som lästs in från textfilen
         public void Load()
         {
-          //Läs in filen: ..\\..\\App_Data\\Recipes.txt
-            //Skapa ny RecipeView, en för varje rad?
-            //RecipeView.Show
-            
-            //Skapa en dynamisk Array där listan sparas
-            List<string> receipeRow = new List<string>();
+        //Skapa en dynamisk Array där listan sparas
+            List<IRecipe> receipeRow = new List<IRecipe>();
+            RecipeReadStatus status = RecipeReadStatus.Indefinite;
 
+            //Indefinite, New, Ingredient, Instruction
             //Skapar automatiskt en try-finally-sats som stänger StreamReader när det är klart.
-            using (StreamReader sr = new StreamReader("App_Data\\Recipes.txt"))
+            using (StreamReader sr = new StreamReader(_path))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    receipeRow.Add(line);
+                    if(line == SectionRecipe)
+                    {
+                        status = RecipeReadStatus.New;
+                    }
+                    if (line == SectionIngredients)
+                    {
+                        status = RecipeReadStatus.Ingredient;
+                    }
+                    if (line == SectionInstructions)
+                    {
+                        status = RecipeReadStatus.Instruction;
+                    }
+                    else
+                    {
+                        IRecipe recept = null;
+
+                       if (status == RecipeReadStatus.New)
+                       {
+                           recept = new Recipe(line);
+                           receipeRow.Add(recept);
+                       }
+                       if (status == RecipeReadStatus.Ingredient)
+                       {
+                           string[] ingredients = line.Split(';');
+                           Ingredient ingr = new Ingredient();
+                           ingredients[0] = ingr.Amount;
+                           ingredients[1] = ingr.Measure;
+                           ingredients[2] = ingr.Name;
+                           
+                           recept.Add(ingr);
+
+                       }
+                       if (status == RecipeReadStatus.Instruction)
+                       {
+                           recept.Add(line);
+                       }
+                       else
+                       {
+                           throw new FileFormatException();
+                       }
+
+                    }
                 }
+                receipeRow.Sort();
+                _recipes = receipeRow;
+                IsModified = false;
+                OnRecipesChanged(EventArgs.Empty);
+
             }
-            // MÅSTE GÖRAS OM TILL EN STRING, Strängen skapas här och skickas med som argument till RecipeView.cs
         }
         public void Save() 
-        { 
-            
+        {
+            using (StreamWriter sw = new StreamWriter("_path"))
+            {
+
+            }
+
         }
     }
 }
+
