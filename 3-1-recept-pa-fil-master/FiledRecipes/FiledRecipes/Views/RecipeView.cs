@@ -22,6 +22,8 @@ namespace FiledRecipes.Views
         //IRecipeView deklarerar
         public void Show(IEnumerable<IRecipe> recipies)
         {
+
+            
             //Tar emot sträng från RecipeRepository.cs
             //Olika handlingar görs beroende på vad det är för sträng
             //Om det är en tom rad, gör ingenting
