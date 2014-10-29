@@ -138,59 +138,66 @@ namespace FiledRecipes.Domain
 
             //Indefinite, New, Ingredient, Instruction
             //Skapar automatiskt en try-finally-sats som stänger StreamReader när det är klart.
-            using (StreamReader sr = new StreamReader(_path))
+            try
             {
-                string line;
-                while ((line = sr.ReadLine()) != null)
+                using (StreamReader sr = new StreamReader(_path))
                 {
-                    if(line == SectionRecipe)
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
                     {
-                        status = RecipeReadStatus.New;
-                    }
-                    if (line == SectionIngredients)
-                    {
-                        status = RecipeReadStatus.Ingredient;
-                    }
-                    if (line == SectionInstructions)
-                    {
-                        status = RecipeReadStatus.Instruction;
-                    }
-                    else
-                    {
-                        IRecipe recept = null;
+                        if (line == SectionRecipe)
+                        {
+                            status = RecipeReadStatus.New;
+                        }
+                        if (line == SectionIngredients)
+                        {
+                            status = RecipeReadStatus.Ingredient;
+                        }
+                        if (line == SectionInstructions)
+                        {
+                            status = RecipeReadStatus.Instruction;
+                        }
+                        else
+                        {
+                            IRecipe recept = null;
 
-                       if (status == RecipeReadStatus.New)
-                       {
-                           recept = new Recipe(line);
-                           receipeRow.Add(recept);
-                       }
-                       if (status == RecipeReadStatus.Ingredient)
-                       {
-                           string[] ingredients = line.Split(';');
-                           Ingredient ingr = new Ingredient();
-                           ingredients[0] = ingr.Amount;
-                           ingredients[1] = ingr.Measure;
-                           ingredients[2] = ingr.Name;
-                           
-                           recept.Add(ingr);
+                            if (status == RecipeReadStatus.New)
+                            {
+                                recept = new Recipe(line);
+                                receipeRow.Add(recept);
+                            }
+                            if (status == RecipeReadStatus.Ingredient)
+                            {
+                                string[] ingredients = line.Split(';');
+                                Ingredient ingr = new Ingredient();
+                                ingredients[0] = ingr.Amount;
+                                ingredients[1] = ingr.Measure;
+                                ingredients[2] = ingr.Name;
 
-                       }
-                       if (status == RecipeReadStatus.Instruction)
-                       {
-                           recept.Add(line);
-                       }
-                       else
-                       {
-                           throw new FileFormatException();
-                       }
+                                recept.Add(ingr);
 
+                            }
+                            if (status == RecipeReadStatus.Instruction)
+                            {
+                                recept.Add(line);
+                            }
+                            else
+                            {
+                                throw new FileFormatException();
+                            }
+
+                        }
                     }
+                    receipeRow.Sort();
+                    _recipes = receipeRow;
+                    IsModified = false;
+                    OnRecipesChanged(EventArgs.Empty);
                 }
-                receipeRow.Sort();
-                _recipes = receipeRow;
-                IsModified = false;
-                OnRecipesChanged(EventArgs.Empty);
+            }
+            catch (Exception ex)
+            {
 
+                Console.WriteLine(ex.Message);
             }
         }
         public void Save() 
@@ -211,6 +218,8 @@ namespace FiledRecipes.Domain
                     }
                 }
             }
+            IsModified = false;
+            OnRecipesChanged(EventArgs.Empty);
         }
     }
 }
