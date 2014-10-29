@@ -197,9 +197,20 @@ namespace FiledRecipes.Domain
         {
             using (StreamWriter sw = new StreamWriter("_path"))
             {
-
+                foreach (Recipe item in _recipes) 
+                {
+                    sw.Write(SectionRecipe);
+                    sw.Write(item.Name);
+                    sw.Write(SectionIngredients);
+                    foreach (Ingredient ingred in item.Ingredients) { 
+                    sw.Write("[0];[1];[2];", ingred.Amount, ingred.Measure, ingred.Name);
+                    }
+                    sw.Write(SectionInstructions);
+                    foreach(string instruction in item.Instructions){
+                        sw.Write(item);
+                    }
+                }
             }
-
         }
     }
 }
