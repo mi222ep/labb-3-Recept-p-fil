@@ -135,6 +135,7 @@ namespace FiledRecipes.Domain
         //Skapa en dynamisk Array där listan sparas
             List<IRecipe> receipeRow = new List<IRecipe>();
             RecipeReadStatus status = RecipeReadStatus.Indefinite;
+            IRecipe recept = null;
 
             //Indefinite, New, Ingredient, Instruction
             //Skapar automatiskt en try-finally-sats som stänger StreamReader när det är klart.
@@ -145,39 +146,46 @@ namespace FiledRecipes.Domain
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        if (line == SectionRecipe)
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            continue;
+                        }
+                        else if (line == SectionRecipe)
                         {
                             status = RecipeReadStatus.New;
                         }
-                        if (line == SectionIngredients)
+                        else if (line == SectionIngredients)
                         {
                             status = RecipeReadStatus.Ingredient;
                         }
-                        if (line == SectionInstructions)
+                        else if (line == SectionInstructions)
                         {
                             status = RecipeReadStatus.Instruction;
                         }
                         else
                         {
-                            IRecipe recept = null;
 
                             if (status == RecipeReadStatus.New)
                             {
                                 recept = new Recipe(line);
                                 receipeRow.Add(recept);
                             }
-                            if (status == RecipeReadStatus.Ingredient)
+                            else if (status == RecipeReadStatus.Ingredient)
                             {
                                 string[] ingredients = line.Split(';');
+                                if (ingredients.Length != 3)
+                                {
+                                    throw new FileFormatException();
+                                }
                                 Ingredient ingr = new Ingredient();
-                                ingredients[0] = ingr.Amount;
-                                ingredients[1] = ingr.Measure;
-                                ingredients[2] = ingr.Name;
+                                ingr.Amount = ingredients[0];
+                                ingr.Measure = ingredients[1];
+                                ingr.Name = ingredients[2];
 
                                 recept.Add(ingr);
 
                             }
-                            if (status == RecipeReadStatus.Instruction)
+                            else if (status == RecipeReadStatus.Instruction)
                             {
                                 recept.Add(line);
                             }
@@ -202,19 +210,24 @@ namespace FiledRecipes.Domain
         }
         public void Save() 
         {
-            using (StreamWriter sw = new StreamWriter("_path"))
+            using (StreamWriter sw = new StreamWriter(_path))
             {
                 foreach (Recipe item in _recipes) 
                 {
-                    sw.Write(SectionRecipe);
-                    sw.Write(item.Name);
-                    sw.Write(SectionIngredients);
-                    foreach (Ingredient ingred in item.Ingredients) { 
-                    sw.Write("[0];[1];[2];", ingred.Amount, ingred.Measure, ingred.Name);
+                    sw.WriteLine(SectionRecipe);
+                    sw.WriteLine(item.Name);
+                    sw.WriteLine(SectionIngredients);
+                    foreach (Ingredient ingred in item.Ingredients) {
+                        sw.Write(ingred.Amount);
+                        sw.Write(";");
+                        sw.Write(ingred.Measure);
+                        sw.Write(";");
+                        sw.Write(ingred.Name);
+                        sw.WriteLine(";");
                     }
-                    sw.Write(SectionInstructions);
+                    sw.WriteLine(SectionInstructions);
                     foreach(string instruction in item.Instructions){
-                        sw.Write(item);
+                        sw.WriteLine(instruction);
                     }
                 }
             }

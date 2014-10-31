@@ -22,6 +22,7 @@ namespace FiledRecipes.Views
         }
         public void Show(IRecipe recipe)
         {
+            Header = recipe.Name;
             ShowHeaderPanel();
             Console.WriteLine(recipe.Name);
             Console.WriteLine("Gör såhär");
